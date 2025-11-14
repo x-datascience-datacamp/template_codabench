@@ -25,6 +25,7 @@ jobs:
               uses: docker/build-push-action@v6
               with:
                 push: false
+                load: true
                 tags: ${{ env.DOCKER_IMAGE_NAME }}
                 # Use GitHub Actions (GHA) as the cache backend
                 # 'cache-from' attempts to restore layers from previous runs
