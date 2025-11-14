@@ -42,10 +42,13 @@ jobs:
                 rm -rf ${{ runner.temp }}/.buildx-cache
                 mv ${{ runner.temp }}/.buildx-cache-new ${{ runner.temp }}/.buildx-cache
 
+            - uses: actions/setup-python@v6
+              with:
+                python-version: '3.12'
+                pip-install: -r requirements.txt
+                cache: 'pip' # caching pip dependencies
             - name: Prepare input/output directories (per README)
-              run: |
-                set -e
-                python setup_data.py
+              run: python setup_data.py
 
             - name: Test ingestion program
               run: |
