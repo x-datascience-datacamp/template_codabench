@@ -15,14 +15,20 @@ def evaluate_model(model, X_test):
     return pd.DataFrame(y_pred)
 
 
+def get_train_data(data_dir):
+    data_dir = Path(data_dir)
+    training_dir = data_dir / "train"
+    X_train = pd.read_csv(training_dir / "train_features.csv")
+    y_train = pd.read_csv(training_dir / "train_labels.csv")
+    return X_train, y_train
+
+
 def main(data_dir, output_dir):
     # Here, you can import info from the submission module, to evaluate the
     # submission
     from submission import get_model
 
-    training_dir = data_dir / "train"
-    X_train = pd.read_csv(training_dir / "train_features.csv")
-    y_train = pd.read_csv(training_dir / "train_labels.csv")
+    X_train, y_train = get_train_data(data_dir)
 
     print("Training the model")
 

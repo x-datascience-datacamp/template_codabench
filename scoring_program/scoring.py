@@ -8,9 +8,9 @@ EVAL_SETS = ["test", "private_test"]
 
 def compute_accuracy(predictions, targets):
     # Make sure there is no NaN, as pandas ignores them in mean computation
-    predictions = predictions.fillna(-10)
+    predictions = predictions.fillna(-10).values
     # Return mean of correct predictions
-    return (predictions == targets).mean()
+    return (predictions == targets.values).mean()
 
 
 def main(reference_dir, prediction_dir, output_dir):
