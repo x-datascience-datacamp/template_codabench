@@ -1,2 +1,13 @@
 pandas
 scikit-learn
+rdkit
+transformers
+torch
+torchvision
+tokenizers
+numpy
+matplotlib
+seaborn
+jupyterlab
+notebook
+ipywidgets

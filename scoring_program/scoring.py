@@ -1,16 +1,16 @@
 import json
 from pathlib import Path
-
+from sklearn.metrics import cohen_kappa_score
 import pandas as pd
 
-EVAL_SETS = ["test", "private_test"]
+EVAL_SETS = ["test"]
 
 
-def compute_accuracy(predictions, targets):
+def compute_kappa(predictions, targets):
     # Make sure there is no NaN, as pandas ignores them in mean computation
     predictions = predictions.fillna(-10).values
     # Return mean of correct predictions
-    return (predictions == targets.values).mean()
+    return cohen_kappa_score(predictions, targets)
 
 
 def main(reference_dir, prediction_dir, output_dir):
@@ -22,10 +22,10 @@ def main(reference_dir, prediction_dir, output_dir):
             prediction_dir / f'{eval_set}_predictions.csv'
         )
         targets = pd.read_csv(
-            reference_dir / f'{eval_set}_labels.csv'
+            reference_dir / f'{eval_set}.csv'
         )
-
-        scores[eval_set] = float(compute_accuracy(predictions, targets))
+        y_true = targets["Label"]
+        scores[eval_set] = float(compute_kappa(predictions, y_true))
 
     # Add train and test times in the score
     json_durations = (prediction_dir / 'metadata.json').read_text()

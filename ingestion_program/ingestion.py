@@ -6,20 +6,20 @@ from pathlib import Path
 import pandas as pd
 
 
-EVAL_SETS = ["test", "private_test"]
+EVAL_SETS = ["test"]
 
 
 def evaluate_model(model, X_test):
-
     y_pred = model.predict(X_test)
     return pd.DataFrame(y_pred)
 
 
 def get_train_data(data_dir):
     data_dir = Path(data_dir)
-    training_dir = data_dir / "train"
-    X_train = pd.read_csv(training_dir / "train_features.csv")
-    y_train = pd.read_csv(training_dir / "train_labels.csv")
+    training_dir = data_dir
+    df = pd.read_csv(training_dir / "train.csv")
+    X_train = df["SMILES"]
+    y_train = df["Label"]
     return X_train, y_train
 
 
@@ -42,8 +42,9 @@ def main(data_dir, output_dir):
     start = time.time()
     res = {}
     for eval_set in EVAL_SETS:
-        X_test = pd.read_csv(data_dir / eval_set / f"{eval_set}_features.csv")
-        res[eval_set] = evaluate_model(model, X_test)
+        X_test = pd.read_csv(data_dir / eval_set / f"{eval_set}.csv")
+        X_smiles = X_test["SMILES"]
+        res[eval_set] = evaluate_model(model, X_smiles)
     test_time = time.time() - start
     print("-" * 10)
     duration = train_time + test_time

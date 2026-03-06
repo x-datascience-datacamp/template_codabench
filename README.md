@@ -7,7 +7,7 @@ public and private test set.
 
 ## Structure of the bundle
 
-- `competition.yaml`: configuration file for the codabench competition,
+- `competition.yaml`:  configuration file for the codabench competition,
   specifying phases, tasks, and evaluation metrics.
 - `ingestion_program/`: contains the ingestion program that will be run on
   participant's submissions. It is responsible for loading the code from the
