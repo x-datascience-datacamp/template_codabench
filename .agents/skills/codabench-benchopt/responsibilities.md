@@ -48,8 +48,9 @@ defining the split.
 
 - Keep it a **native `benchopt run --config` file** plus the minimum of
   competition-only keys, stripped by ingestion before the run (benchopt rejects
-  unknown options) and forwarded to scoring. The same file then drives a local
-  reproduction.
+  unknown options) and forwarded to scoring. A local run config at the
+  repository root mirrors it, plus the solvers to run, and drives both
+  `benchopt prepare --config` and `benchopt run --config` locally.
 - If the benchmark travels in the phase (fork 5), this directory is the unit
   published *and* staged, and symlinked shared code must be dereferenced at
   every copy — see fork 5.

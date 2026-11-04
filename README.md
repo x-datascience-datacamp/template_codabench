@@ -74,6 +74,7 @@ To hand in:
 | `ingestion_program/` | runs `benchopt run` on a submission |
 | `scoring_program/` | scores the test predictions against the labels, averages over the folds into `scores.json` |
 | `phases/main/input_data/config.yaml` | the phase: benchopt run config (dataset, seed, one CV fold per repetition) |
+| `local_config.yml` | the same run config for local runs, plus the solvers to run |
 | `competition.yaml`, `pages/` | the Codabench competition and its pages |
 | `tools/` | bundle builder, base and competition Docker images, local Docker run |
 | `.agents/skills/` | the AI agent skills above |
@@ -113,7 +114,8 @@ In this order, since each step builds on the previous one:
 5. **Task, CV and metric.** Write the metric in
    `benchmark/benchmark_utils/metric.py`. Adapt `Objective.set_data` (data
    and `cv`), `get_objective` and `evaluate_result`, and set `n_repetitions`
-   in `phases/main/input_data/config.yaml` to the number of folds.
+   in `phases/main/input_data/config.yaml` and `local_config.yml` to the
+   number of folds.
 6. **Submission contract.** Adapt `CompetSolver` to what `get_objective`
    returns, then the `Dummy` floor and the sample `random-forest.py`.
 7. **Evaluation evidence.** Fill the notebook's evaluation section: leakage
@@ -144,14 +146,22 @@ In this order, since each step builds on the previous one:
 
 ## Running locally
 
+`local_config.yml` sets what a local run does: the dataset and its
+parameters, the solvers, the seed and the number of CV folds. Both
+`benchopt prepare` and `benchopt run` read it:
+
 ```bash
 pip install -r requirements.txt
-benchopt test benchmark --skip-install                  # design checks
-benchopt run benchmark -d Simulated -s Dummy -s RandomForest -r 5
-
-benchopt prepare benchmark -d Real
-benchopt run benchmark -d Real -s RandomForest -r 5        # 5 CV folds
+benchopt test benchmark --skip-install                     # design checks
+benchopt prepare benchmark --config local_config.yml
+benchopt run benchmark --config local_config.yml           # 5 CV folds
+benchopt run benchmark --config local_config.yml -d Simulated   # smoke test
 ```
+
+A command-line option overrides its key in the file, as `-d Simulated` does
+here. The platform runs the phase config instead,
+`phases/main/input_data/config.yaml`: keep the dataset, seed and number of
+folds of the two files in sync.
 
 The data goes to `$BENCHOPT_DATA_HOME` (default: `benchmark/data`).
 benchopt caches `prepare`: if you delete the data or change
@@ -160,8 +170,9 @@ benchopt caches `prepare`: if you delete the data or change
 ## Building and testing the bundle
 
 ```bash
-benchopt prepare benchmark -d Real   # the bundle ships the prepared data
-python tools/create_bundle.py        # -> bundle.zip, to upload on Codabench
+# the bundle ships the prepared data
+benchopt prepare benchmark --config local_config.yml
+python tools/create_bundle.py   # -> bundle.zip, to upload on Codabench
 ```
 
 The bundle carries the competition config, the pages, the programs, the

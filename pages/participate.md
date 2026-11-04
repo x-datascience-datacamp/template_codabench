@@ -60,11 +60,18 @@ platform **trains your code**, once per fold, then evaluates it. Copy
 
 ## Run it locally, same code as the server
 
+`local_config.yml` sets the dataset, the solvers, the seed and the 5 folds
+of a local run. Add your `my_submission/submission.py` to its `solver` list,
+then:
+
 ```bash
 pip install -r requirements.txt
-benchopt prepare benchmark -d Real
-benchopt run benchmark -d Real -s my_submission/submission.py -r 5
+benchopt prepare benchmark --config local_config.yml   # builds the data
+benchopt run benchmark --config local_config.yml
 ```
+
+A command-line option overrides the file, e.g. `-s my_submission/submission.py`
+runs your submission alone.
 
 The cross-validation and public scores you get locally
 (`objective_accuracy_cv` and `objective_accuracy_public`, averaged over the 5

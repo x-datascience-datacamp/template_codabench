@@ -1,4 +1,5 @@
-# Phase config: a native `benchopt run --config` file.
+# Phase config: a native `benchopt run --config` file. local_config.yml at
+# the repository root mirrors it for local runs: keep the two in sync.
 dataset:
   - Real
 seed: 42

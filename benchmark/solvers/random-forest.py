@@ -6,12 +6,11 @@ A submission is a benchopt solver: a ``submission.py`` defining
 The bundle ships this file as the Codabench sample submission.
 
 Copy it to a folder of your own as ``submission.py`` and run it exactly as
-the platform does::
+the platform does, with the dataset, seed and folds of ``local_config.yml``::
 
-    benchopt run benchmark -d Simulated -s my_submission/submission.py
-    # real data
-    benchopt prepare benchmark -d Real
-    benchopt run benchmark -d Real -s my_submission/submission.py
+    benchopt prepare benchmark --config local_config.yml
+    benchopt run benchmark --config local_config.yml \
+        -s my_submission/submission.py
 """
 
 from sklearn.ensemble import RandomForestClassifier
