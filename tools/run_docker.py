@@ -6,10 +6,13 @@ prepared data are mounted as ``/app/input_data``, a submission as
 ``benchmark_utils``, the metric, next to scoring), and the hidden test labels
 as ``/app/input/ref``. Prepare the data first with
 ``benchopt prepare benchmark -d Real`` (writes ``benchmark/data``).
+``--gpu`` gives ingestion all the host GPUs (needs the NVIDIA Container
+Toolkit).
 
 Usage
 -----
     python tools/run_docker.py [--data <host-data-dir>] [--submission <dir>]
+                               [--gpu]
 """
 
 import argparse
@@ -32,6 +35,8 @@ if __name__ == "__main__":
     parser.add_argument("--submission",
                         help="Folder holding submission.py (default: the "
                         "sample benchmark/solvers/random-forest.py)")
+    parser.add_argument("--gpu", action="store_true",
+                        help="Run ingestion with all the host GPUs")
     args = parser.parse_args()
     data = Path(args.data).resolve()
 
@@ -50,9 +55,11 @@ if __name__ == "__main__":
     )
     out = REPO / "_codabench/ingestion"
     out.mkdir(parents=True, exist_ok=True)
+    gpus = [docker.types.DeviceRequest(count=-1, capabilities=[["gpu"]])]
     print("Running ingestion...")
     logs = client.containers.run(
         image=image, remove=True, name="ingestion", user="root",
+        device_requests=gpus if args.gpu else None,
         command="python3 /app/program/ingestion.py",
         volumes=[
             f"{REPO / 'ingestion_program'}:/app/program:ro",
