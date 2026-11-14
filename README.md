@@ -176,7 +176,8 @@ cat _codabench/scoring/scores.json
 ```
 
 `python tools/run_docker.py` does the same inside the Docker image (needs
-`pip install docker`).
+`pip install docker`). Add `--gpu` to give ingestion the host GPUs, as on a
+GPU worker (needs the NVIDIA Container Toolkit).
 
 ## Large data: staging it on a self-hosted worker
 
